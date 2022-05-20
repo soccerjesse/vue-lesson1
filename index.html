@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://unpkg.com/vue@next"></script>
+</head>
+<body>
+  <style>
+    .blue{
+      color: blue;
+    }
+    .red {
+      color: red;
+    }
+  </style>
+
+  <div id="app1">
+    app1:{{ message }}
+    <p>{{ count }} かい増やす</p>
+    <button v-on:click="increment">増やす</button>
+    <span v-if="seen">aiueo</span>
+    <button v-on:click="off">off</button>
+    <p v-bind:class="class1">{{ class1 }}です</p>
+    <ul>
+      <li v-for="todo in todos">
+        {{ todo.text }}
+      </li>
+    </ul>
+    <ul>
+      <template1 prop1="次へ"></template1>
+      <template1 :prop1="word"></template1>
+    </ul>
+    <ul>
+      <template2 
+        v-for="item in items"
+        :props2="item"
+        props3="です"
+      ></template2>
+    </ul>
+  </div>
+
+  <script>
+    const App1 = {
+      data(){
+        return{
+          message: "hello world",
+          count: 0,
+          seen: true,
+          class1: "blue",
+          todos: [
+            {text: 'rails'},
+            {text: 'vue.js'},
+            {text: 'ruby'},
+          ],
+          word: "soccer",
+          items:[
+            {id: 0,text: "ruby"},
+            {id: 1,text: "vue"},
+            {id: 2,text: "rails"},
+          ]
+        }
+      },
+      methods: {
+        increment: function() {
+          this.count += 1
+        },
+        off: function(){
+          this.seen = false
+        }
+      }
+    }
+    app = Vue.createApp(App1)
+
+    app.component('template1',{
+      props: ['prop1'],
+      template: `
+        <button>{{prop1}}</button>
+        <br>
+      `
+    })
+
+    app.component('template2',{
+      props:['props2','props3'],
+      template: `
+        <li>{{props2.id}} {{props2.text}} {{props3}}</li>
+      `
+    })
+    app.mount('#app1')
+  </script>
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>vue lesson</title>
+
+  <style>
+    .error{
+      color: red;
+    }
+    .flip-list-move{
+      transition: transform .5s;
+    }
+    .alert{
+      background-color: #fcc;
+      padding: 10px;
+      border: 1px solid red;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    {{ message }}
+  </div>
+
+  <div id="app2">
+    <p v-bind:class="error_class">エラーです</p>
+    <img :src="img_src">
+  </div>
+
+  <div id="app3">
+    <p>{{ now }}</p>
+    <button v-on:click="time">現在時刻を表示</button>
+  </div>
+
+  <div id="app4">
+    <button v-on:click="shuffle">シャッフル</button>
+    <transition-group name="flip-list" tag="ul">
+      <li v-for="pref in prefs" v-bind:key="pref.name">
+        {{ pref.name }}
+      </li>
+    </transition-group>
+  </div>
+
+  <div id="app5">
+    <alert-box>入力なし</alert-box>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
+  <script>
+    let app = new Vue({
+      el:"#app",
+      data:{
+        message: "hello world"
+      }
+    })
+
+    let app2 = new Vue({
+      el: "#app2",
+      data:{
+        error_class: "error",
+        img_src: "img01.png"
+      }
+    })
+
+    let app3 = new Vue({
+      el:'#app3',
+      data:{
+        now: "00:00:00"
+      },
+      methods:{
+        time: function(e){
+          let date = new Date();
+          this.now = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() 
+        }
+      }
+    })
+
+    let app4 = new Vue({
+      el: "#app4",
+      data:{
+        prefs:[
+          {name: "北海道"},
+          {name: "東京"},
+          {name: "横浜"},
+          {name: "埼玉"},
+          {name: "宮城"},
+        ]
+      },
+      methods:{
+        shuffle: function(){
+          this.prefs = _.shuffle(this.prefs);
+        }
+      }
+    })
+
+    Vue.component('alert-box', {
+      template: `
+      <div class="alert" v-on:click="caution">
+        <strong>Error!</strong>
+        <slot></slot>
+      </div>
+      `,
+      methods:{
+        caution: function(){
+          alert('クリックされました');
+        }
+      }
+    })
+
+    const app5 = new Vue({
+      el: "#app5"
+    })
+
+  </script>
+</body>
+</html>
