@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>タイピングゲーム</title>
+  <link rel="stylesheet" href="lesson2.css">
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+</head>
+<body>
+  <div id="app" class="container">
+    <div class="title">
+      <h1>Typing Game</h1>
+      <div class="marker">
+      </div>
+    </div>
+    <button v-if="startflag!=true" class="start mb-20" @click="gamestart">START</button>
+    <div v-if="startflag">
+      <div class="question mb-20">{{ current }}</div>
+      <div v-if="current_counts == question_counts" class="clear">Clear</div>
+      <div class="typewrapper mb-20">
+        <input id="typeform" v-model="typebox" type="text" class="typeform">
+      </div>
+
+      <div class="gaugewrapper mb-20">
+        <div v-bind:style="styleobject" class="gauge"></div>
+      </div>
+      <div>{{ current_counts }}/{{ question_counts }}</div>
+    </div>
+  </div>
+
+  <script>
+    new Vue({
+      el: "#app",
+      data:{
+        startflag: "",
+        current: "aaa",
+        questions:[
+          'apple',
+          'banana',
+          'chocolate',
+          'donut',
+          'espresso',
+        ],
+        typebox:"",
+        current_counts: 0,
+        question_counts: 0,
+      },
+      computed:{
+        styleobject:function(){
+          width = 20 * this.current_counts + "%"
+          if(this.current_counts == 5){
+            color = "green"
+          }else{
+            color = "orange"
+          }
+          return{
+            'width': width,
+            'background-color': color
+          }
+        }
+      },
+      methods:{
+        gamestart:function(){
+          this.startflag = true;
+          this.$nextTick(function(){
+            document.getElementById('typeform').focus()
+          })
+        }
+      },
+      mounted:function(){
+        this.current = this.questions[0]
+        this.question_counts = this.questions.length
+      },
+      watch:{
+        typebox:function(e){
+          if(e == this.current){
+            this.questions.splice(0,1)
+            this.current = this.questions[0]
+            this.typebox = ""
+            this.current_counts = this.current_counts + 1
+          }
+        }
+      }
+    })
+  </script>
+</body>
+</html>
